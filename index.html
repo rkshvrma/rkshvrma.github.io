@@ -102,6 +102,12 @@
       padding: 160px 0 200px;
       max-width: 1100px;
     }
+    .eyebrow-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -112,7 +118,6 @@
       letter-spacing: 1.2px;
       text-transform: uppercase;
       color: var(--text);
-      margin-bottom: 56px;
       padding: 7px 14px;
       border-radius: 999px;
       background: var(--highlight);
@@ -125,6 +130,11 @@
       background: var(--text);
       animation: pulse 2s ease-in-out infinite;
     }
+    .eyebrow.role {
+      background: transparent;
+      border: 1.5px solid var(--text);
+    }
+    .eyebrow.role::before { display: none; }
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50%      { opacity: 0.5; transform: scale(0.8); }
@@ -694,7 +704,10 @@
     </nav>
 
     <section class="hero">
-      <div class="eyebrow">Available for work</div>
+      <div class="eyebrow-row">
+        <div class="eyebrow">Available for work</div>
+        <div class="eyebrow role">iOS Engineer</div>
+      </div>
       <h1>Apps. Games.<br /><span class="highlight">AI agents.</span></h1>
       <p class="lead">Solo, native, indie. Currently shipping on Apple platforms &mdash; <em>SwiftUI, Foundation Models, LangGraph, MCP</em>.</p>
     </section>
