@@ -859,6 +859,19 @@
   </div>
 
   <script>
+    // Phase-lock the eyebrow pulse dots so both pills blink in sync
+    window.addEventListener('load', () => {
+      requestAnimationFrame(() => {
+        try {
+          const pulses = document.getAnimations().filter((a) => a.animationName === 'pulse');
+          if (pulses.length > 1) {
+            const t = pulses[0].startTime;
+            pulses.forEach((a) => { a.startTime = t; });
+          }
+        } catch (e) {}
+      });
+    });
+
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
