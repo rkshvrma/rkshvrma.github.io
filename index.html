@@ -144,8 +144,18 @@
       display: inline-block;
       color: var(--text);
       text-shadow:
-        -0.052em -0.03em 0 #25F4EE,
-         0.052em  0.03em 0 #FE2C55;
+        -0.05em -0.028em 0 #7C3AED,
+         0.05em  0.028em 0 #FF2E9A;
+    }
+    .hero h1 .highlight::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -8px;
+      right: -8px;
+      bottom: 0.14em;
+      height: 0.58em;
+      background: var(--highlight);
     }
 
     @keyframes glitch-in {
