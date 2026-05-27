@@ -594,11 +594,19 @@
       content: "";
       position: absolute;
       z-index: -1;
-      left: -14px;
-      right: -14px;
-      top: -0.52em;
-      bottom: -0.04em;
-      background: var(--highlight);
+      left: -16px;
+      right: -18px;
+      top: -0.34em;
+      bottom: -0.10em;
+      background: linear-gradient(
+        to bottom,
+        #B388FF 0%,
+        #B388FF 21%,
+        var(--highlight) 21%,
+        var(--highlight) 100%
+      );
+      border-radius: 10px 30px 14px 38px;
+      transform: rotate(-2.4deg);
     }
     .contact-links {
       display: flex;
