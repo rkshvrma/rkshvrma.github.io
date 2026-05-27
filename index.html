@@ -189,7 +189,10 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero h1 .highlight { animation: none; }
+      .hero h1 .highlight,
+      .work-info h2,
+      .work-info h2 .ltr,
+      .work-link { animation: none !important; }
       .reveal, .reveal-x { opacity: 1 !important; transform: none !important; transition: none; }
     }
 
@@ -257,6 +260,26 @@
       letter-spacing: -2px;
       color: var(--text);
       margin-bottom: 24px;
+      animation: head-bob 2.8s ease-in-out infinite;
+      transform-origin: left center;
+    }
+    .work-info h2 .ltr {
+      display: inline-block;
+      animation: letter-sweep 3.6s linear infinite;
+    }
+    @keyframes letter-sweep {
+      0%   { color: var(--text); }
+      5%   { color: #CEFA52; }
+      12%  { color: var(--text); }
+      100% { color: var(--text); }
+    }
+    @keyframes head-bob {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    @keyframes cta-bounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
     }
     .work-info .work-blurb {
       font-family: 'Inter', sans-serif;
@@ -300,6 +323,7 @@
       padding-bottom: 4px;
       border-bottom: 2px solid var(--highlight);
       transition: padding-left 0.18s, padding-right 0.18s;
+      animation: cta-bounce 1.9s ease-in-out infinite;
     }
     .work-link:hover {
       background: var(--highlight);
@@ -711,7 +735,7 @@
         <div class="eyebrow role">iOS ENGINEER</div>
       </div>
       <h1>Apps. Games.<br /><span class="highlight">AI agents.</span></h1>
-      <p class="lead">Solo, native, indie. Currently shipping on Apple platforms &mdash; <em>SwiftUI, Foundation Models, LangGraph, MCP</em>.</p>
+      <p class="lead">Solo, native, indie. Currently shipping on Apple platforms &mdash; <em>iOS, SwiftUI, Foundation Models, LangGraph, MCP</em>.</p>
     </section>
 
     <section class="work-section reveal">
@@ -883,6 +907,22 @@
       });
     }, { threshold: 0.06, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('.reveal, .reveal-x').forEach((el) => io.observe(el));
+
+    // Wrap project headline letters for the green color-sweep wave
+    document.querySelectorAll('.work-info h2').forEach((h2) => {
+      const text = h2.textContent;
+      h2.textContent = '';
+      let li = 0;
+      for (const ch of text) {
+        if (ch === ' ') { h2.appendChild(document.createTextNode(' ')); continue; }
+        const s = document.createElement('span');
+        s.className = 'ltr';
+        s.textContent = ch;
+        s.style.animationDelay = (li * 0.08) + 's';
+        h2.appendChild(s);
+        li++;
+      }
+    });
 
     const cursor = document.querySelector('.cursor');
     if (window.matchMedia('(pointer: fine)').matches) {
