@@ -142,19 +142,10 @@
     .hero h1 .highlight {
       position: relative;
       display: inline-block;
-      z-index: 0;
-      animation: glitch-in 0.85s steps(1) 0.15s both,
-                 glitch-loop 3s steps(1) 1.5s infinite;
-    }
-    .hero h1 .highlight::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      left: -8px;
-      right: -8px;
-      bottom: 0.14em;
-      height: 0.58em;
-      background: var(--highlight);
+      color: var(--text);
+      text-shadow:
+        -0.052em -0.03em 0 #25F4EE,
+         0.052em  0.03em 0 #FE2C55;
     }
 
     @keyframes glitch-in {
