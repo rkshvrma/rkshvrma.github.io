@@ -154,6 +154,8 @@
       display: inline-block;
       color: var(--text);
       text-shadow: -0.05em -0.028em 0 #7C3AED;
+      animation: glitch-in 0.85s steps(1) 0.15s both,
+                 glitch-loop 3s steps(1) 1.5s infinite;
     }
     .hero h1 .highlight::before {
       content: "";
@@ -167,7 +169,7 @@
     }
 
     @keyframes glitch-in {
-      0%   { opacity: 0; transform: translate(0, 0); text-shadow: none; clip-path: inset(0 0 0 0); }
+      0%   { opacity: 0; transform: translate(0, 0); text-shadow: -0.05em -0.028em 0 #7C3AED; clip-path: inset(0 0 0 0); }
       6%   { opacity: 1; transform: translate(-5px, 2px); text-shadow: 4px 0 #00e0ff, -4px 0 #ff2d55; clip-path: inset(8% 0 62% 0); }
       14%  { transform: translate(5px, -2px); text-shadow: -5px 0 #00e0ff, 5px 0 #ff2d55; clip-path: inset(54% 0 18% 0); }
       22%  { transform: translate(-3px, 1px); text-shadow: 3px 0 #00e0ff, -3px 0 #ff2d55; clip-path: inset(30% 0 44% 0); }
@@ -175,15 +177,15 @@
       38%  { transform: translate(-2px, 0); text-shadow: 2px 0 #00e0ff, -2px 0 #ff2d55; clip-path: inset(4% 0 78% 0); }
       46%  { transform: translate(2px, 0); text-shadow: -2px 0 #00e0ff, 2px 0 #ff2d55; clip-path: inset(40% 0 30% 0); }
       54%  { transform: translate(-1px, 0); text-shadow: 1px 0 #00e0ff, -1px 0 #ff2d55; clip-path: inset(0 0 0 0); }
-      62%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: none; clip-path: inset(0 0 0 0); }
+      62%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: -0.05em -0.028em 0 #7C3AED; clip-path: inset(0 0 0 0); }
     }
 
     @keyframes glitch-loop {
-      0%, 90%, 100% { text-shadow: none; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+      0%, 90%, 100% { text-shadow: -0.05em -0.028em 0 #7C3AED; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
       91% { text-shadow: 3px 0 #00e0ff, -3px 0 #ff2d55; transform: translate(-3px, 0); clip-path: inset(22% 0 52% 0); }
       93% { text-shadow: -3px 0 #ff2d55, 3px 0 #00e0ff; transform: translate(3px, 0); clip-path: inset(58% 0 14% 0); }
       95% { text-shadow: 2px 0 #00e0ff, -2px 0 #ff2d55; transform: translate(-1px, 0); clip-path: inset(38% 0 34% 0); }
-      96% { text-shadow: none; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+      96% { text-shadow: -0.05em -0.028em 0 #7C3AED; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
     }
 
     @media (prefers-reduced-motion: reduce) {
