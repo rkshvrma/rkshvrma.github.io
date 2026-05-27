@@ -140,12 +140,14 @@
       margin-bottom: 56px;
     }
     .hero h1 .highlight {
-      background: linear-gradient(120deg, var(--highlight), var(--highlight));
-      background-size: 100% 32%;
+      background: var(--highlight);
+      background-size: 100% 0.72em;
       background-repeat: no-repeat;
-      background-position: 0 86%;
-      padding: 0 6px;
-      margin: 0 -6px;
+      background-position: 0 0.62em;
+      padding: 0 8px;
+      margin: 0 -8px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
 
     .hero p.lead {
