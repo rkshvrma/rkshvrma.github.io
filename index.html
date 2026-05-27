@@ -586,9 +586,19 @@
       line-height: 0.94;
     }
     .contact-row h3 .highlight {
+      position: relative;
+      display: inline-block;
+      margin-left: -18px;
+    }
+    .contact-row h3 .highlight::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -14px;
+      right: -14px;
+      top: -0.52em;
+      bottom: -0.04em;
       background: var(--highlight);
-      padding: 0 6px;
-      margin: 0 -6px;
     }
     .contact-links {
       display: flex;
