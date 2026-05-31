@@ -371,6 +371,103 @@
     .work-status.review::before { background: #ffb347; animation: pulse 2s ease-in-out infinite; }
     .work-status.proto::before { background: var(--text-dim); }
 
+    /* Experience: sits above projects as background credentials */
+    .experience-section {
+      padding: 24px 0 56px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 72px;
+    }
+    .exp-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 28px;
+    }
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+    .exp-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .exp-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(14, 14, 14, 0.06);
+    }
+    .exp-logo-apple {
+      background: #0E0E0E;
+      color: #FFFFFF;
+    }
+    .exp-logo-apple svg {
+      width: 30px;
+      height: 36px;
+      margin-top: -2px;
+    }
+    .exp-logo-spirit {
+      background: #FFEC00;
+      color: #0E0E0E;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+    }
+    .exp-body {
+      padding-top: 4px;
+    }
+    .exp-head {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(22px, 2.8vw, 30px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .exp-head .exp-meta {
+      font-weight: 500;
+      color: var(--text-soft);
+      letter-spacing: -0.3px;
+    }
+    .exp-blurb {
+      font-family: 'Inter', sans-serif;
+      font-size: 15.5px;
+      line-height: 1.6;
+      color: var(--text-soft);
+      max-width: 640px;
+    }
+    .exp-blurb em {
+      font-style: normal;
+      color: var(--text);
+      font-weight: 600;
+    }
+    @media (max-width: 640px) {
+      .exp-row {
+        grid-template-columns: 56px 1fr;
+        gap: 18px;
+      }
+      .exp-logo {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+      }
+      .exp-logo-apple svg { width: 26px; height: 26px; }
+      .exp-logo-spirit { font-size: 15px; }
+      .exp-blurb { font-size: 14.5px; }
+    }
+
     /* Project visuals */
     .work-visual {
       position: relative;
@@ -793,7 +890,31 @@
         <div class="eyebrow role">iOS ENGINEER</div>
       </div>
       <h1>Apps. Games.<br /><span class="highlight">AI agents.</span></h1>
-      <p class="lead">Solo, native, indie. Currently shipping on Apple platforms &mdash; <em>iOS, SwiftUI, Foundation Models, Agentic AI, LangGraph, MCP, Claude Code</em>.</p>
+      <p class="lead">Solo, native, indie. Currently shipping on Apple platforms: <em>iOS, SwiftUI, Foundation Models, Agentic AI, LangGraph, MCP, Claude Code</em>.</p>
+    </section>
+
+    <section class="experience-section reveal">
+      <div class="exp-eyebrow">00 &nbsp;&middot;&nbsp; EXPERIENCE</div>
+      <div class="exp-list">
+        <article class="exp-row reveal-x">
+          <div class="exp-logo exp-logo-apple" aria-label="Apple">
+            <svg viewBox="0 0 256 315" aria-hidden="true">
+              <path fill="currentColor" d="M213.803 167.03c.442 47.58 41.74 63.413 42.197 63.615-.35 1.116-6.599 22.563-21.757 44.716-13.104 19.153-26.705 38.235-48.13 38.63-21.05.388-27.82-12.483-51.888-12.483-24.061 0-31.582 12.088-51.51 12.871-20.68.783-36.428-20.71-49.64-39.793-27-39.033-47.633-110.3-19.928-158.406 13.763-23.89 38.36-39.017 65.056-39.405 20.307-.387 39.475 13.662 51.889 13.662 12.406 0 35.699-16.895 60.186-14.414 10.25.427 39.026 4.14 57.503 31.186-1.49.923-34.335 20.044-33.978 59.822M174.24 50.199c10.98-13.29 18.369-31.79 16.353-50.199-15.826.636-34.962 10.546-46.314 23.828-10.173 11.763-19.082 30.589-16.678 48.633 17.64 1.365 35.66-8.964 46.64-22.262"/>
+            </svg>
+          </div>
+          <div class="exp-body">
+            <h3 class="exp-head">Apple <span class="exp-meta">&middot; 5 yrs</span></h3>
+            <p class="exp-blurb">Retail POS (EasyPay / Apple Pay) across <em>500+ stores</em>. Led Obj-C &rarr; Swift VIPER migration; <em>30% faster launch</em>, <em>85% test coverage</em>.</p>
+          </div>
+        </article>
+        <article class="exp-row reveal-x">
+          <div class="exp-logo exp-logo-spirit" aria-label="Spirit Airlines">spirit</div>
+          <div class="exp-body">
+            <h3 class="exp-head">Spirit Airlines <span class="exp-meta">&middot; 2 yrs</span></h3>
+            <p class="exp-blurb">Shipped <em>4 production apps</em>. On-device CoreML baggage model (<em>~$1M/yr saved</em>); guest booking, check-in, and payments app serving <em>millions</em>.</p>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section class="work-section reveal">
@@ -804,7 +925,7 @@
       <div class="work-showcase">
         <div class="work-info reveal-x">
           <h2>Snap: Quiz Battles</h2>
-          <p class="work-blurb">Daily pop-culture trivia with a <em>simulated-multiplayer</em> LIVE mode &mdash; 11 named opponents whose scores tick question by question. Entirely client-side. Sub-second cold start.</p>
+          <p class="work-blurb">Daily pop-culture trivia with a <em>simulated-multiplayer</em> LIVE mode. 11 named opponents whose scores tick question by question. Entirely client-side. Sub-second cold start.</p>
           <div class="work-tags">
             <span class="tag">SwiftUI</span>
             <span class="tag">Sign in with Apple</span>
@@ -850,7 +971,7 @@
       <div class="work-showcase">
         <div class="work-info reveal-x">
           <h2>MedBill Companion</h2>
-          <p class="work-blurb">Two-mode iOS app pairing <em>on-device Apple Foundation Models</em> for PHI-touching reasoning with cloud LLMs for pre-visit prep. A HIPAA-avoidance architecture &mdash; protected data never leaves the device. LangGraph orchestrates multi-step flows. MCP servers connect external context.</p>
+          <p class="work-blurb">Two-mode iOS app pairing <em>on-device Apple Foundation Models</em> for PHI-touching reasoning with cloud LLMs for pre-visit prep. A HIPAA-avoidance architecture: protected data never leaves the device. LangGraph orchestrates multi-step flows. MCP servers connect external context.</p>
           <div class="work-tags">
             <span class="tag">Foundation Models</span>
             <span class="tag">LangGraph</span>
@@ -874,7 +995,7 @@
       <div class="work-showcase flip">
         <div class="work-info reveal-x">
           <h2>Pitch Pulse 26</h2>
-          <p class="work-blurb">A Lock-Screen-first companion for the 2026 football tournament. <em>Live Activities</em> push score and momentum in real time &mdash; no app open required. Dynamic Island states, Home Screen widgets, 104 fixtures, 16 host-city guides. Backed by Cloudflare Workers with in-edge APNs push. Zero tracking, $0/mo to run.</p>
+          <p class="work-blurb">A Lock-Screen-first companion for the 2026 football tournament. <em>Live Activities</em> push score and momentum in real time, no app open required. Dynamic Island states, Home Screen widgets, 104 fixtures, 16 host-city guides. Backed by Cloudflare Workers with in-edge APNs push. Zero tracking, $0/mo to run.</p>
           <div class="work-tags">
             <span class="tag">Swift 6</span>
             <span class="tag">ActivityKit</span>
