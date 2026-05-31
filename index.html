@@ -278,6 +278,10 @@
     .work-info h2 .ltr {
       display: inline-block;
       animation: letter-sweep 3.6s linear infinite;
+      animation-play-state: paused;
+    }
+    .work-info h2.sweep-on .ltr {
+      animation-play-state: running;
     }
     @keyframes letter-sweep {
       0%   { color: var(--text); }
@@ -968,7 +972,8 @@
     document.querySelectorAll('.reveal, .reveal-x').forEach((el) => io.observe(el));
 
     // Wrap headline words (no intra-word break) then letters (for the green wave)
-    document.querySelectorAll('.work-info h2').forEach((h2) => {
+    const projectHeads = document.querySelectorAll('.work-info h2');
+    projectHeads.forEach((h2) => {
       const words = h2.textContent.split(' ');
       h2.textContent = '';
       let li = 0;
@@ -987,6 +992,20 @@
         if (wi < words.length - 1) h2.appendChild(document.createTextNode(' '));
       });
     });
+
+    // Start the lime sweep only once a project heading scrolls into view.
+    // Toggling the class restarts each .ltr animation from t=0, so the wave
+    // always begins from the first letter — never mid-cycle.
+    const sweepIo = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('sweep-on');
+        } else {
+          e.target.classList.remove('sweep-on');
+        }
+      });
+    }, { threshold: 0.25 });
+    projectHeads.forEach((h2) => sweepIo.observe(h2));
 
     // Play each project video only while in view — avoids iOS Safari's
     // simultaneous-autoplay limit that left some loops stuck on the poster.
