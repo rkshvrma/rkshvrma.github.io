@@ -229,6 +229,7 @@
   .exp-logo.apple { background: oklch(22% 0.01 280); color: #fff; }
   .exp-logo.apple svg { width: 24px; height: 28px; margin-top: -2px; }
   .exp-logo.spirit { background: #FFEC00; color: #111; font-weight: 800; font-style: italic; font-size: 15px; letter-spacing: -0.5px; }
+  img.exp-logo { object-fit: cover; }
   .exp-main { min-width: 0; flex: 1; }
   .exp-top { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
   .exp-role { font-size: 16.5px; font-weight: 650; letter-spacing: -0.3px; color: var(--ink); }
@@ -255,6 +256,7 @@
   .app-icon.grid { background: linear-gradient(150deg, oklch(70% 0.17 165), oklch(62% 0.17 195)); }
   .app-icon.med { background: linear-gradient(150deg, oklch(62% 0.16 255), oklch(56% 0.17 285)); }
   .app-icon.pitch { background: linear-gradient(150deg, oklch(64% 0.2 300), oklch(58% 0.2 330)); }
+  img.app-icon { object-fit: cover; }
   .app-tag { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--tertiary); }
   .app-name { font-size: 19px; font-weight: 700; letter-spacing: -0.5px; color: var(--ink); margin-top: 3px; }
   .app-body { font-size: 13.5px; color: var(--secondary); line-height: 1.58; flex: 1; }
@@ -418,7 +420,7 @@
   <div class="work-grid">
     <article class="app wide glass reveal">
       <div class="app-head">
-        <div class="app-icon snap">S</div>
+        <img class="app-icon" src="images/icon-snap.png" alt="Snap: Quiz Battles app icon" width="56" height="56" loading="lazy">
         <div>
           <div class="app-tag">01 · Trivia · iOS</div>
           <div class="app-name">Snap: Quiz Battles</div>
@@ -433,7 +435,7 @@
 
     <article class="app narrow glass reveal">
       <div class="app-head">
-        <div class="app-icon grid">G</div>
+        <img class="app-icon" src="images/icon-grid-glide.png" alt="Grid Glide app icon" width="56" height="56" loading="lazy">
         <div>
           <div class="app-tag">02 · Word Puzzle · Flutter</div>
           <div class="app-name">Grid Glide</div>
@@ -463,7 +465,7 @@
 
     <article class="app wide glass reveal">
       <div class="app-head">
-        <div class="app-icon pitch">P</div>
+        <img class="app-icon" src="images/icon-pitch-pulse.png" alt="Pitch Pulse 26 app icon" width="56" height="56" loading="lazy">
         <div>
           <div class="app-tag">04 · Live Activities · iOS</div>
           <div class="app-name">Pitch Pulse 26</div>
@@ -499,7 +501,7 @@
   </div>
 
   <div class="exp-card glass reveal">
-    <div class="exp-logo spirit">S</div>
+    <img class="exp-logo spirit" src="images/logo-spirit.png" alt="Spirit Airlines logo" width="52" height="52" loading="lazy">
     <div class="exp-main">
       <div class="exp-top"><div class="exp-role">Spirit Airlines — Senior iOS Engineer</div><div class="exp-period">2017 — 2021</div></div>
       <p class="exp-body">Shipped <strong>4 production apps</strong> serving millions of guests. Built an on-device CoreML model for baggage classification — saved <strong>~$1M/yr</strong> in manual review costs. Owned guest booking, check-in, and Apple Pay flows end-to-end.</p>
