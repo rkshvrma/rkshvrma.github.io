@@ -181,11 +181,28 @@ h1 span{color:var(--ink3)}
 .btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;height:34px;padding:0 13px;font:500 13px/1 var(--sans);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
 .btn:hover{border-color:var(--ink3)}
 .btn.pri{background:var(--blue-fill);border-color:var(--blue-fill);color:#fff}
+/* Everything tappable gives a little under the finger, and arrows lean the way they lead. */
+.btn,.tbtn,.you,.chip,.tap,.rule,.frame,.dock button,.mode button{transition:transform .14s ease,border-color .15s,background-color .15s,filter .15s}
+.btn:active,.store:active,.tbtn:active,.you:active,.chip:active,.rule:active,.dock button:active,.mode button:active{transform:scale(.96)}
+.tap:active,.frame:active{transform:scale(.985)}
+.arr{display:inline-block;transition:transform .2s ease}
+.arr.nudge{animation:arr .8s ease-in-out 2}
+@keyframes arr{50%{transform:translateX(5px)}}
+@media (hover:hover){
+  .btn.pri:hover{filter:brightness(1.08)}
+  .btn:hover .arr,.store:hover .arr{transform:translateX(3px)}
+  .btn:hover .arr.up,.store:hover .arr.up,a:hover>.arr.up{transform:translate(2px,-2px)}
+  .dev:not(.is-focus) .frame:hover{filter:brightness(1.07)}
+}
 
 .dev{position:absolute;left:50%;top:50%;display:grid;justify-items:center;gap:17px;transition:transform .62s cubic-bezier(.2,.8,.2,1),opacity .45s;will-change:transform}
 .scheme{justify-self:start;font:500 11px/1 var(--mono);color:var(--ink3);white-space:nowrap;transition:color .25s,opacity .25s}
 .dev:not([data-a="0"]):not([data-a="1"]) .scheme{opacity:0}
 .is-focus .scheme{color:var(--blue)}
+/* The tap hint: a touch ring that pulses twice on the front device. */
+.frame::after{content:"";position:absolute;z-index:4;left:50%;top:58%;width:calc(var(--H,420px)*.12);aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.58);box-shadow:0 0 0 calc(var(--H,420px)*.006) rgba(0,0,0,.34),0 0 0 calc(var(--H,420px)*.022) rgba(255,255,255,.34);opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.5)}
+.frame.tapme::after{animation:tapme .95s ease-out 2}
+@keyframes tapme{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.9)}}
 .frame{appearance:none;border:0;margin:0;cursor:pointer;position:relative;display:block;height:var(--H,420px);aspect-ratio:402/874;padding:calc(var(--H,420px)*.014);border-radius:calc(var(--H,420px)*.088);background:var(--bezel);box-shadow:0 0 0 1px var(--ring),var(--shadow);container-type:size}
 .dev[data-kind="pad"] .frame{height:calc(var(--H,420px)*.72);aspect-ratio:1210/834;padding:calc(var(--H,420px)*.016);border-radius:calc(var(--H,420px)*.042)}
 .screen{position:relative;display:block;width:100%;height:100%;overflow:hidden;border-radius:calc(var(--H,420px)*.075);background:#fff;color:#111;text-align:left}
@@ -202,7 +219,7 @@ h1 span{color:var(--ink3)}
 .sel i:nth-child(3){left:-4px;bottom:-4px}
 .sel i:nth-child(4){right:-4px;bottom:-4px}
 .sel b{display:none}
-.store{margin-top:4px;font:500 12px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;text-decoration:none;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s}
+.store{margin-top:4px;font:500 12px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;text-decoration:none;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s,transform .14s ease,border-color .15s}
 .store.note{background:none;border-color:transparent;color:var(--ink3);font-family:var(--mono);font-size:11px}
 .is-focus .store{opacity:1;pointer-events:auto}
 .app[data-open] .store{opacity:0;pointer-events:none}
@@ -644,7 +661,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
         <p class="role">iOS &amp; AI Engineer · Dallas, TX</p>
         <p class="tagline">Native apps, games and on-device intelligence.</p>
         <p class="lede">Ex-Apple, ex-Spirit Airlines. Now leading mobile for a four-brand travel-tech group and shipping my own apps with SwiftUI, Foundation Models and agentic AI. Three live on the App Store, one in development.</p>
-        <div class="cta"><a class="btn pri" href="#contact">Get in touch</a><button class="btn" type="button" id="walk">Walk the wall →</button></div>
+        <div class="cta"><a class="btn pri" href="#contact">Get in touch</a><button class="btn" type="button" id="walk">Walk the wall <span class="arr" aria-hidden="true">→</span></button></div>
       </div>
 
       <div class="wall" id="wall" tabindex="-1" role="group" aria-label="Shipped work, eight devices">
@@ -1008,6 +1025,15 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   devs.forEach(() => dots.appendChild(document.createElement('i')));
 
   /* wall */
+  /* Where device i sits when device f is in front: sideways offset, depth and turn. */
+  function place(i, f, H, w) {
+    const d = i - f, a = Math.abs(d), s = Math.sign(d);
+    if (!a) return { x: 0, z: 0, ry: 0 };
+    let run = w[f] / 2 + H * .17;
+    for (let k = f + s; k !== i; k += s) run += w[k] * .5;
+    return { x: s * (run + w[i] * .36), z: -150 - (a - 1) * 60, ry: -s * 42 };
+  }
+
   function layout() {
     const r = wall.getBoundingClientRect();
     if (!r.width || !r.height) return;
@@ -1022,12 +1048,9 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     wall.style.perspectiveOrigin = 'calc(50% + ' + shift.toFixed(1) + 'px) 50%';
     devs.forEach((el, i) => {
       const d = i - S.focus, a = Math.abs(d), s = Math.sign(d);
-      let x = shift, z = 0, ry = 0, sc = 1, op = 1;
+      const at = place(i, S.focus, H, w);
+      let x = shift + at.x, z = at.z, ry = at.ry, sc = 1, op = 1;
       if (a) {
-        let run = w[S.focus] / 2 + H * .17;
-        for (let k = S.focus + s; k !== i; k += s) run += w[k] * .5;
-        run += w[i] * .36;
-        x += s * run; z = -150 - (a - 1) * 60; ry = -s * 42;
         // Every device that reaches into the window shows, so wide screens see more of the wall. They stay opaque: a faded device lets the one behind show through.
         op = Math.abs(x) - w[i] * .37 > r.width / 2 ? 0 : 1;
         if (S.open) { x += s * r.width * .1; op = Math.min(op, .1); }
@@ -1048,6 +1071,55 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     });
     pager.textContent = (S.focus + 1) + ' / ' + devs.length;
     Array.from(dots.children).forEach((d, i) => d.classList.toggle('on', i === S.focus));
+    S.geo = { H: H, w: w, shift: shift };
+  }
+
+  /* Hints, for a visitor who has not touched the wall yet. The wall leans toward the next device and settles back,
+     then a touch ring pulses on the front one. They run at most twice and any real input ends them for the session. */
+  let hintT = [], hintsOff = session.get('xc-walked') === '1', leans = 0, ringed = false;
+  const hintOK = () => !hintsOff && S.built && app.dataset.phase === 'built' && S.view === 'work' && !S.open && !app.dataset.source && tf.hidden && !document.hidden;
+
+  function lean() {
+    const g = S.geo, to = S.focus + (S.focus < devs.length - 1 ? 1 : -1);
+    if (!g) return;
+    devs.forEach((el, i) => {
+      const a = place(i, S.focus, g.H, g.w), b = place(i, to, g.H, g.w), t = .24;   // a quarter of the way to the next device: enough to read, never onto the hero text
+      el.style.transform = 'translate(-50%,-50%) translate3d(' + (g.shift + a.x + (b.x - a.x) * t).toFixed(1) + 'px,0,' + (a.z + (b.z - a.z) * t).toFixed(0) + 'px) rotateY(' + (a.ry + (b.ry - a.ry) * t).toFixed(1) + 'deg)';
+    });
+    const arrow = $('#walk .arr');
+    if (arrow) { arrow.classList.remove('nudge'); void arrow.offsetWidth; arrow.classList.add('nudge'); }
+    setTimeout(layout, 460);          // always settles back, even if the hints are cancelled meanwhile
+  }
+
+  function ring() {
+    const frame = $('.frame', devs[S.focus]), mouse = fine.matches && !narrow();
+    if (mouse) { const r = frame.getBoundingClientRect(); put(rk, r.left + r.width * .5 + 4, r.top + r.height * .58 + 6); }
+    hintT.push(setTimeout(() => frame.classList.add('tapme'), mouse ? 700 : 0));
+    hintT.push(setTimeout(() => { frame.classList.remove('tapme'); ambient(); }, mouse ? 2800 : 2100));
+  }
+
+  function hintSoon(ms) {
+    clearHints();
+    if (hintsOff || reduce.matches || leans >= 2) return;
+    hintT.push(setTimeout(() => {
+      if (!hintOK()) return;            // not now: the next visit to this view, or the tab coming back, tries again
+      leans++; lean();
+      if (!ringed) hintT.push(setTimeout(() => { if (hintOK()) { ringed = true; ring(); } }, 1700));
+      hintT.push(setTimeout(() => hintSoon(0), 11000));
+    }, ms));
+  }
+
+  function clearHints() {
+    if (!hintT.length) return;
+    hintT.forEach(clearTimeout); hintT = [];
+    $$('.tapme', wall).forEach(el => el.classList.remove('tapme'));
+    cursorsSoon();
+  }
+
+  function endHints() {
+    if (hintsOff) return;
+    clearHints(); hintsOff = true;
+    session.set('xc-walked', '1');
   }
 
   /* Where the hero text really ends, in the wall's coordinates. It measures lines, not boxes: a wrapped heading's box runs to the column edge. */
@@ -1077,6 +1149,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   function setFocus(i) {
     i = Math.max(0, Math.min(devs.length - 1, i));
     if (i === S.focus && !S.open) return;
+    endHints();
     if (S.open) closeCase(true);
     S.focus = i;
     syncPanel();
@@ -1086,6 +1159,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   }
 
   function openCase() {
+    endHints();
     renderBrief();
     if (narrow()) { panel.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' }); return; }
     panel.hidden = false; S.open = true; app.dataset.open = '1';
@@ -1120,7 +1194,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     $('#pagerbox').hidden = $('#pg-sep').hidden = v !== 'work';
     if (!fromHash) { try { history.replaceState(null, '', '#' + v); } catch (e) {} }
     if (narrow()) setSource(false);
-    if (v === 'work') { syncPanel(); layout(); } else $('#v-' + v).scrollTop = 0;
+    if (v === 'work') { syncPanel(); layout(); hintSoon(1000); } else $('#v-' + v).scrollTop = 0;
     if (v === 'ask' && was !== 'ask') enterAI(); else if (was === 'ask' && v !== 'ask') leaveAI();
     cursorsSoon();
   }
@@ -1248,6 +1322,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     layout();
     setTimeout(() => { S.entering = false; devs.forEach(el => { el.style.transitionDelay = ''; }); }, 1000);
     if (session.get('xc-tf') !== '1') app.dataset.tf = 'new';
+    hintSoon(instant ? 1500 : 2700);
     const h = location.hash.slice(1), hv = ALIAS[h] || h;
     if (VIEWS.includes(hv) && hv !== 'work') setView(hv, true);
     setTimeout(ambient, instant ? 900 : 1600);
@@ -1324,6 +1399,18 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2 && !S.open) {
       swiped = true; setFocus(S.focus - Math.sign(dx)); setTimeout(() => { swiped = false; }, 80);
     }
+  });
+
+  wall.addEventListener('pointerdown', clearHints);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) hintSoon(1200); });
+  // Arrows at the end of a button or link become their own element, so they can move on hover.
+  $$('.btn, .store, .rows a, .cert a, .foot a').forEach(el => {
+    const t = el.lastChild, m = t && t.nodeType === 3 && t.data.match(/^([^]*?)\s*([→↗])\s*$/);
+    if (!m) return;
+    t.data = m[1] + ' ';
+    const arrow = document.createElement('span');
+    arrow.className = m[2] === '↗' ? 'arr up' : 'arr'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = m[2];
+    el.appendChild(arrow);
   });
 
   wall.addEventListener('transitionend', e => {
