@@ -579,6 +579,8 @@ h1 span{color:var(--ink3)}
   .num b{font-size:34px}
   .cboard{grid-template-columns:1fr;margin-top:26px;padding:24px 20px}
   .cboard .sel{inset:-7px}
+  .rows div{grid-template-columns:1fr;gap:1px}
+  .avail{font-size:clamp(10.5px,3vw,12px);text-wrap:balance}
   .foot{padding-top:30px}
   .mode,.app[data-view="ask"] .ai-only,.app[data-view="ask"] .tabs>span,.asknote{display:none}
   .app[data-view="ask"] .dock{display:flex}
@@ -1407,7 +1409,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   $$('.btn, .store, .rows a, .cert a, .foot a').forEach(el => {
     const t = el.lastChild, m = t && t.nodeType === 3 && t.data.match(/^([^]*?)\s*([→↗])\s*$/);
     if (!m) return;
-    t.data = m[1] + ' ';
+    t.data = el.classList.contains('btn') ? m[1] : m[1] + '\u00A0';     // a no-break space, so the arrow cannot wrap onto a line of its own
     const arrow = document.createElement('span');
     arrow.className = m[2] === '↗' ? 'arr up' : 'arr'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = m[2];
     el.appendChild(arrow);
