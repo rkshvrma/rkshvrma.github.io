@@ -193,17 +193,19 @@ h1 span{color:var(--ink3)}
 .island{position:absolute;z-index:3;left:50%;top:calc(var(--H,420px)*.034);width:27%;height:calc(var(--H,420px)*.03);transform:translateX(-50%);border-radius:99px;background:#000}
 .dev[data-kind="pad"] .island{display:none}
 .sel{position:absolute;inset:-10px;border:1.5px solid var(--blue);border-radius:2px;opacity:0;transition:opacity .25s;pointer-events:none}
-.is-focus .sel,.sel.on{opacity:1}
+/* The selection box means "picked for inspection": it shows while the front device is pointed at or has its details open, never at rest. */
+.app[data-open] .is-focus .sel{opacity:1}
+@media (hover:hover){.is-focus .frame:hover .sel,.cboard:hover .sel{opacity:1}}
 .sel i{position:absolute;width:7px;height:7px;background:var(--surface);border:1.5px solid var(--blue)}
 .sel i:nth-child(1){left:-4px;top:-4px}
 .sel i:nth-child(2){right:-4px;top:-4px}
 .sel i:nth-child(3){left:-4px;bottom:-4px}
 .sel i:nth-child(4){right:-4px;bottom:-4px}
-.sel b{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);background:var(--blue-fill);color:#fff;font:600 10px/1 var(--mono);padding:4px 6px;border-radius:4px;white-space:nowrap;transition:opacity .25s}
-.store{margin-top:18px;font:500 12px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;text-decoration:none;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s}
+.sel b{display:none}
+.store{margin-top:4px;font:500 12px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;text-decoration:none;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s}
 .store.note{background:none;border-color:transparent;color:var(--ink3);font-family:var(--mono);font-size:11px}
 .is-focus .store{opacity:1;pointer-events:auto}
-.app[data-open] .store,.app[data-open] .sel b{opacity:0;pointer-events:none}
+.app[data-open] .store{opacity:0;pointer-events:none}
 .dots{display:none;justify-content:center;gap:7px;padding:0 0 16px}
 .dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
 .dots i.on{background:var(--ink)}
@@ -895,7 +897,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     <section class="view contact" id="v-contact" hidden aria-label="Contact">
       <div class="cboard">
         <span class="blabel">Contact</span>
-        <span class="sel on" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="sel" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <div>
           <h2>Let’s build something native.</h2>
           <p>Open to senior iOS, AI engineering, and founding-engineer roles. Email gets the fastest reply.</p>
@@ -1062,7 +1064,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
 
   function renderBrief() {
     const el = devs[S.focus];
-    $('#case-scheme').textContent = el.dataset.name;
+    $('#case-scheme').textContent = el.dataset.name + ' · ' + $('.sel b', el).textContent;
     $('#case-body').innerHTML = $('.brief', el).innerHTML;
   }
 
