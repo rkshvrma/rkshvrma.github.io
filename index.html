@@ -424,6 +424,28 @@ h1 span{color:var(--ink3)}
 .mode button{appearance:none;border:0;background:none;height:22px;padding:0 10px;border-radius:6px;font:600 11.5px/1 var(--sans);color:var(--ink2);cursor:pointer}
 .mode button[aria-pressed="true"]{background:var(--seg);color:var(--ink);box-shadow:0 1px 2px rgba(22,24,32,.16)}
 .mode button[data-mode="ai"][aria-pressed="true"]{color:var(--ai)}
+/* The AI side of the switch reads as a button: its own color, a sparkle, and words that say what it does. */
+.mode button{display:inline-flex;align-items:center;gap:5px;position:relative}
+.mode button svg{width:12px;height:12px;flex:none}
+.mode button[data-mode="ai"]{color:var(--ai)}
+.mode button[data-mode="ai"]:not([aria-pressed="true"]):hover{background:var(--ai-soft)}
+.app:not([data-ai-seen]) .mode button[data-mode="ai"] svg,.app:not([data-ai-seen]) .dock button[data-view="ask"] .ti{animation:twinkle 4.2s ease-in-out 3s infinite}
+@keyframes twinkle{0%,80%,100%{transform:none}87%{transform:scale(1.3) rotate(20deg)}94%{transform:scale(.92) rotate(-8deg)}}
+.mode button::after,.dock button[data-view="ask"]::after{content:"";position:absolute;left:50%;top:50%;width:44px;height:44px;border-radius:50%;background:var(--halo);box-shadow:0 0 0 2px var(--ai);opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.5)}
+.mode button.tapme::after,.dock button.tapme::after{animation:tapme .95s ease-out 2}
+/* Once per session, a card points at the switch for a visitor who has not opened the AI side yet. */
+.aihint{position:absolute;z-index:45;top:56px;left:170px;max-width:calc(100% - 24px);display:flex;align-items:center;gap:10px;padding:7px 7px 7px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink);font-size:13px;line-height:1.3;opacity:0;transform:translateY(-6px);transition:opacity .28s,transform .28s}
+.aihint.on{opacity:1;transform:none}
+.aihint::before{content:"";position:absolute;top:-6px;left:var(--ax,30px);width:10px;height:10px;margin-left:-5px;background:var(--surface);border:solid var(--line);border-width:1px 0 0 1px;transform:rotate(45deg)}
+.aihint.up{top:auto;bottom:calc(70px + env(safe-area-inset-bottom,0px));transform:translateY(6px)}
+.aihint.up.on{transform:none}
+.aihint.up::before{top:auto;bottom:-6px;border-width:0 1px 1px 0}
+.aihint b{flex:1;min-width:0;display:flex;align-items:center;gap:6px;font-weight:600;color:var(--ai)}
+.aihint b svg{width:14px;height:14px;flex:none}
+.aihint .btn{height:30px;font-size:12.5px;flex:none}
+.aihint .btn.pri{background:var(--ai-fill);border-color:var(--ai-fill)}
+.aihint .x{appearance:none;flex:none;border:0;background:none;width:28px;height:28px;border-radius:7px;color:var(--ink2);font:400 18px/1 var(--sans);cursor:pointer}
+.aihint .x:hover{background:var(--line2);color:var(--ink)}
 .ai-only{display:none}
 .app[data-view="ask"] .ai-only{display:inline-flex}
 .crumb .dest{font-weight:600;color:var(--ai)}
@@ -584,6 +606,8 @@ h1 span{color:var(--ink3)}
   .foot{padding-top:30px}
   .mode,.app[data-view="ask"] .ai-only,.app[data-view="ask"] .tabs>span,.asknote{display:none}
   .app[data-view="ask"] .dock{display:flex}
+  .dock button[data-view="ask"]{position:relative}
+  .dock button[data-view="ask"]:not([aria-current]){color:var(--ai)}
   .tab{padding:0 7px}
   .ask{display:flex;flex-direction:column;overflow:auto;padding:0 0 calc(58px + env(safe-area-inset-bottom,0px))}
   .mapkey,.app[data-ans] .mapkey{position:static;max-width:none;padding:12px 16px 0}
@@ -616,7 +640,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.6" y="2.6" width="12.8" height="10.8" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M6 2.6v10.8" stroke="currentColor" stroke-width="1.3"/></svg>
     <span>Source</span>
   </button>
-  <div class="mode" role="group" aria-label="Scheme"><button type="button" data-mode="ios" aria-pressed="true" title="iOS scheme: my work on a wall of devices">iOS</button><button type="button" data-mode="ai" aria-pressed="false" title="AI scheme: ask an agent about my work">AI</button></div>
+  <div class="mode" role="group" aria-label="Scheme"><button type="button" data-mode="ios" aria-pressed="true" title="iOS scheme: my work on a wall of devices">iOS</button><button type="button" data-mode="ai" aria-pressed="false" title="Ask an AI agent about my work. It answers live from my resume."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11 3.5l1.9 4.6 4.6 1.9-4.6 1.9L11 16.5l-1.9-4.6L4.5 10l4.6-1.9z"/><path fill="currentColor" d="M18 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>Ask my AI</button></div>
   <div class="crumb"><b>Rakesh Varma</b><span aria-hidden="true">›</span><span id="crumb">Work</span><span class="ai-only" aria-hidden="true">›</span><span class="dest ai-only" id="model" title="The model that writes the answers">Llama 3.3 70B</span></div>
   <div class="act" id="act" data-state="ok" role="status">
     <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="M4.7 8.3l2.2 2.2 4.5-5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -628,6 +652,11 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     <button class="you" id="you" type="button" title="Change your role"><small>You:</small><span id="you-role">Hiring manager</span></button>
   </div>
 </header>
+
+<div class="aihint" id="aihint" role="dialog" aria-labelledby="aihint-t" hidden>
+  <b id="aihint-t"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11 3.5l1.9 4.6 4.6 1.9-4.6 1.9L11 16.5l-1.9-4.6L4.5 10l4.6-1.9z"/><path fill="currentColor" d="M18 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>Ask my AI agent about my work</b>
+  <button class="btn pri" type="button" id="aihint-go">Try it</button><button class="x" type="button" id="aihint-x" aria-label="Close">×</button>
+</div>
 
 <div class="stage">
   <aside class="editor" id="editor" aria-label="Source code">
@@ -962,7 +991,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
       <button type="button" data-view="work" aria-current="page"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.6"/><path d="M11 6h2"/></svg>Work</button>
       <button type="button" data-view="about"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.6-3.6 3.4-5.6 7-5.6s6.4 2 7 5.6"/></svg>About</button>
       <button type="button" data-view="contact"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.6"/><path d="M4.5 7.5l7.5 5.6 7.5-5.6"/></svg>Contact</button>
-      <button type="button" data-view="ask"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3.5l1.9 4.6 4.6 1.9-4.6 1.9L11 16.5l-1.9-4.6L4.5 10l4.6-1.9z"/><path d="M18 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button>
+      <button type="button" data-view="ask"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3.5l1.9 4.6 4.6 1.9-4.6 1.9L11 16.5l-1.9-4.6L4.5 10l4.6-1.9z"/><path d="M18 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>Ask AI</button>
       <span class="sep" id="pg-sep"></span>
       <span class="pg" id="pagerbox"><button type="button" id="prev" aria-label="Previous device">‹</button><output id="pager">1 / 8</output><button type="button" id="next" aria-label="Next device">›</button></span>
       <span class="sep"></span>
@@ -1124,6 +1153,58 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     session.set('xc-walked', '1');
   }
 
+  /* The AI switch, pointed at once per session for a visitor who has not opened it. On desktop the Rakesh cursor
+     taps it and a card drops below; on phones the card sits above the Ask AI tab. Any click elsewhere closes it. */
+  const aiHint = $('#aihint');
+  let aiHintT = [], aiTries = 0;
+  if (session.get('xc-ai') === '1') app.dataset.aiSeen = '1';
+  const aiHintOK = () => !app.dataset.aiSeen && session.get('xc-ai-hint') !== '1' && S.built && app.dataset.phase === 'built' && S.view === 'work' && !S.open && !app.dataset.source && tf.hidden && !document.hidden;
+
+  function aiHintSoon(ms) {
+    aiHintT.forEach(clearTimeout); aiHintT = [];
+    if (app.dataset.aiSeen || session.get('xc-ai-hint') === '1') return;
+    aiHintT.push(setTimeout(showAiHint, ms));
+  }
+
+  function showAiHint() {
+    if (!aiHintOK()) { if (!app.dataset.aiSeen && aiTries++ < 4) aiHintT.push(setTimeout(showAiHint, 6000)); return; }
+    const phone = narrow(), target = phone ? $('.dock [data-view="ask"]') : $('.mode [data-mode="ai"]');
+    if (!target || !target.offsetParent) return;
+    session.set('xc-ai-hint', '1');
+    const r = target.getBoundingClientRect(), box = app.getBoundingClientRect(), mouse = fine.matches && !phone && !reduce.matches;
+    if (mouse) put(rk, r.left + r.width * .62, r.top + r.height * .72);
+    aiHintT.push(setTimeout(() => target.classList.add('tapme'), mouse ? 650 : 0));
+    aiHintT.push(setTimeout(() => {
+      const mid = r.left + r.width / 2 - box.left;
+      aiHint.classList.toggle('up', phone);
+      aiHint.style.left = '0px';     // measure its natural width before placing it
+      aiHint.hidden = false;
+      const w = aiHint.offsetWidth;
+      const left = phone ? Math.max(12, Math.min(box.width - w - 12, mid - w + 34)) : Math.max(12, mid - 30);
+      aiHint.style.left = left + 'px';
+      aiHint.style.top = phone ? '' : (r.bottom - box.top + 10) + 'px';
+      aiHint.style.setProperty('--ax', Math.round(mid - left) + 'px');
+      const c = aiHint.getBoundingClientRect(), hits = el => { if (!el) return false; const b = el.getBoundingClientRect(); return c.left < b.right && c.right > b.left && c.top < b.bottom && c.bottom > b.top; };
+      if (!phone && [$('.avail', hero), $('.scheme', devs[S.focus]), $('.frame', devs[S.focus])].some(hits)) { aiHint.hidden = true; return; }   // never over the hero or the devices
+      requestAnimationFrame(() => aiHint.classList.add('on'));
+    }, mouse ? 900 : 300));
+    aiHintT.push(setTimeout(() => { target.classList.remove('tapme'); if (mouse) ambient(); }, mouse ? 2700 : 2200));
+    aiHintT.push(setTimeout(hideAiHint, 15000));
+  }
+
+  function hideAiHint() {
+    aiHintT.forEach(clearTimeout); aiHintT = [];
+    $$('.mode .tapme, .dock .tapme').forEach(el => el.classList.remove('tapme'));
+    if (aiHint.hidden) return;
+    aiHint.classList.remove('on');
+    setTimeout(() => { if (!aiHint.classList.contains('on')) aiHint.hidden = true; }, 300);
+  }
+
+  $('#aihint-go').addEventListener('click', () => { hideAiHint(); setView('ask'); });
+  $('#aihint-x').addEventListener('click', hideAiHint);
+  document.addEventListener('pointerdown', e => { if (!aiHint.hidden && !aiHint.contains(e.target)) hideAiHint(); }, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !aiHint.hidden) hideAiHint(); });
+
   /* Where the hero text really ends, in the wall's coordinates. It measures lines, not boxes: a wrapped heading's box runs to the column edge. */
   function heroInk() {
     const box = hero.getBoundingClientRect(), walk = document.createTreeWalker(hero, NodeFilter.SHOW_TEXT), rg = document.createRange();
@@ -1184,6 +1265,8 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     v = ALIAS[v] || v;
     if (!VIEWS.includes(v)) v = 'work';
     if (S.open) closeCase(true);
+    hideAiHint();
+    if (v === 'ask' || ALIAS[v] === 'ask') app.dataset.aiSeen = '1';
     const was = S.view;
     S.view = v; app.dataset.view = v;
     if (v !== 'ask') S.last = v;
@@ -1196,7 +1279,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     $('#pagerbox').hidden = $('#pg-sep').hidden = v !== 'work';
     if (!fromHash) { try { history.replaceState(null, '', '#' + v); } catch (e) {} }
     if (narrow()) setSource(false);
-    if (v === 'work') { syncPanel(); layout(); hintSoon(1000); } else $('#v-' + v).scrollTop = 0;
+    if (v === 'work') { syncPanel(); layout(); hintSoon(1000); aiHintSoon(5200); } else $('#v-' + v).scrollTop = 0;
     if (v === 'ask' && was !== 'ask') enterAI(); else if (was === 'ask' && v !== 'ask') leaveAI();
     cursorsSoon();
   }
@@ -1325,6 +1408,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     setTimeout(() => { S.entering = false; devs.forEach(el => { el.style.transitionDelay = ''; }); }, 1000);
     if (session.get('xc-tf') !== '1') app.dataset.tf = 'new';
     hintSoon(instant ? 1500 : 2700);
+    aiHintSoon(instant ? 4200 : 7400);   // after the wall's first lean and tap ring
     const h = location.hash.slice(1), hv = ALIAS[h] || h;
     if (VIEWS.includes(hv) && hv !== 'work') setView(hv, true);
     setTimeout(ambient, instant ? 900 : 1600);
@@ -1404,7 +1488,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   });
 
   wall.addEventListener('pointerdown', clearHints);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) hintSoon(1200); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { hintSoon(1200); aiHintSoon(3600); } });
   // Arrows at the end of a button or link become their own element, so they can move on hover.
   $$('.btn, .store, .rows a, .cert a, .foot a').forEach(el => {
     const t = el.lastChild, m = t && t.nodeType === 3 && t.data.match(/^([^]*?)\s*([→↗])\s*$/);
