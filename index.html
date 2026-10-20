@@ -63,6 +63,8 @@
   --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Geist","Segoe UI",Roboto,sans-serif;
   --mono:ui-monospace,"SF Mono",SFMono-Regular,"Geist Mono",Menlo,Consolas,monospace;
   --edw-open:min(46vw,520px);
+  --pet-a:rgba(255,240,238,.85); --pet-b:rgba(235,248,255,.85); --pet-edge:rgba(255,255,255,.8);
+  --pill-glow:0 0 0 2px rgba(56,189,248,.35),0 6px 18px rgba(249,115,22,.18);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -75,6 +77,8 @@
     --bezel:#0B0B0D; --ring:rgba(255,255,255,.16); --hud:rgba(70,72,80,.88);
     --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.42);
     --ai:#A9A7FF; --ai-fill:#5E5CE6; --ai-soft:#2D2D4A; --halo:rgba(150,148,255,.11); --seg:#4A4B53; --bad:#FF7A6B;
+    --pet-a:rgba(72,48,56,.55); --pet-b:rgba(32,52,70,.55); --pet-edge:rgba(255,255,255,.09);
+    --pill-glow:0 0 0 2px rgba(56,189,248,.5),0 6px 18px rgba(249,115,22,.22);
   }
 }
 :root[data-theme="dark"]{
@@ -87,6 +91,8 @@
   --bezel:#0B0B0D; --ring:rgba(255,255,255,.16); --hud:rgba(70,72,80,.88);
   --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.42);
   --ai:#A9A7FF; --ai-fill:#5E5CE6; --ai-soft:#2D2D4A; --halo:rgba(150,148,255,.11); --seg:#4A4B53; --bad:#FF7A6B;
+  --pet-a:rgba(72,48,56,.55); --pet-b:rgba(32,52,70,.55); --pet-edge:rgba(255,255,255,.09);
+  --pill-glow:0 0 0 2px rgba(56,189,248,.5),0 6px 18px rgba(249,115,22,.22);
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -170,6 +176,47 @@ a.ln:hover,a.ln:focus-visible{background:var(--ed-hi);outline:0}
 .wall{position:absolute;inset:0 0 72px;perspective:1500px;z-index:1;touch-action:pan-y;outline:0;transition:perspective-origin .62s cubic-bezier(.2,.8,.2,1)}
 .hero{position:absolute;z-index:2;left:clamp(16px,4vw,56px);top:calc(50% - 36px);transform:translateY(-50%);width:min(36%,460px);display:grid;gap:13px;justify-items:start;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
 .hero.off{opacity:0;transform:translate(-28px,-50%);pointer-events:none}
+/* The pet: a plush guide under the hero that filters the wall. Four poses are stacked and crossfade, with a spring pop on each change. */
+.pet{justify-self:stretch;max-width:440px;margin-top:44px;position:relative;container-type:inline-size;display:grid;grid-template-columns:115px minmax(0,1fr);grid-template-areas:"av say" "pills pills";gap:12px;padding:14px 16px 16px 12px;border-radius:24px;background:linear-gradient(135deg,var(--pet-a),var(--pet-b));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px var(--pet-edge),0 1px 2px rgba(22,24,32,.05),0 16px 36px rgba(22,24,32,.08)}
+.pet-av{grid-area:av;position:relative;width:115px;height:123px;margin-top:-48px}
+.pet-bob{position:absolute;inset:0;transform-origin:50% 100%;animation:petbob 3.6s ease-in-out infinite}
+@keyframes petbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.pet-av.pop .pet-bob{animation:petpop .62s cubic-bezier(.34,1.56,.64,1),petbob 3.6s ease-in-out .62s infinite}
+@keyframes petpop{0%{transform:none}30%{transform:translateY(-6px) scale(1.05)}62%{transform:translateY(1px) scale(1.03,.96)}100%{transform:none}}
+.pet-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:translateY(5px) scale(.97);transition:opacity .24s ease,transform .55s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 6px 9px rgba(22,24,32,.13))}
+.pet-av img.on{opacity:1;transform:none}
+.pet-say{grid-area:say;align-self:center;position:relative;display:grid;align-items:center;padding:10px 13px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line2),0 1px 2px rgba(22,24,32,.04);font:500 13.5px/1.42 var(--sans);color:var(--ink);text-wrap:pretty}
+.pet-say>*{grid-area:1/1;margin:0}
+.pet-size{visibility:hidden}
+.pet-size b{font-weight:600}
+.pet-line{transition:opacity .13s ease}
+.pet-say.swap .pet-line{opacity:0}
+.pet-say::before{content:"";position:absolute;left:-6px;top:50%;width:11px;height:11px;margin-top:-5.5px;background:var(--surface);border:solid var(--line2);border-width:0 0 1px 1px;transform:rotate(45deg)}
+.pet-go{appearance:none;border:0;background:none;padding:0;font:600 13.5px/1.42 var(--sans);color:var(--ai);cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.pet-pills{grid-area:pills;display:flex;flex-wrap:wrap;gap:8px}
+.pill{appearance:none;flex:1 1 auto;justify-content:center;height:32px;padding:0 12px 0 10px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink);display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1 var(--sans);cursor:pointer;white-space:nowrap;transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,border-color .2s}
+.pill svg{width:15px;height:15px;flex:none}
+.pill[data-filter="ai"] svg{color:var(--ai)}
+.pill:hover{transform:translateY(-2px)}
+.pill:active{transform:scale(.96)}
+.pill[aria-pressed="true"]{border-color:transparent;box-shadow:var(--pill-glow)}
+@container (max-width:380px){.pill svg{display:none}.pill{padding:0 10px}}
+@container (max-width:300px){.pet-pills{gap:6px}.pill{padding:0 8px;font-size:12px}}
+/* When the hero would run under the toolbar or the dock, the pet steps down (data-fit, set by fitPet): smaller, then without its bubble. */
+.pet[data-fit]{margin-top:26px;grid-template-columns:72px minmax(0,1fr);padding:8px 12px 10px 10px;gap:8px 10px}
+.pet[data-fit] .pet-av{width:72px;height:77px;margin-top:-30px}
+.pet[data-fit] .pet-say{font-size:12.5px;padding:7px 10px}
+.pet[data-fit] .pet-go{font-size:12.5px}
+.pet[data-fit] .pill{height:28px;font-size:12px}
+.pet[data-fit="2"]{grid-template-columns:58px minmax(0,1fr);grid-template-areas:"av pills";align-items:end;margin-top:22px;padding:8px 10px}
+.pet[data-fit="2"] .pet-av{width:58px;height:62px;margin-top:-26px}
+.pet[data-fit="2"] .pet-say,.pet[data-fit="2"] .pill svg{display:none}
+.pet[data-fit="2"] .pet-pills{gap:6px}
+.pet[data-fit="2"] .pill{padding:0 9px;font-size:11.5px}
+.pet[data-fit="3"]{display:none}
+/* The wall's filter: devices that leave fade and shrink, then the rest close up. */
+.dev.out{opacity:0!important;pointer-events:none;transition:transform .62s cubic-bezier(.2,.8,.2,1),opacity .26s}
+.dev.out .frame{transform:translateY(8px) scale(.96)}
 .avail{margin:0;display:inline-flex;align-items:center;gap:7px;font:500 12px/1.3 var(--mono);color:var(--ink2)}
 .avail i{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
 h1{margin:0;font:700 clamp(36px,4.5vw,66px)/.98 var(--sans);letter-spacing:-.035em;text-wrap:balance}
@@ -431,21 +478,6 @@ h1 span{color:var(--ink3)}
 .mode button[data-mode="ai"]:not([aria-pressed="true"]):hover{background:var(--ai-soft)}
 .app:not([data-ai-seen]) .mode button[data-mode="ai"] svg,.app:not([data-ai-seen]) .dock button[data-view="ask"] .ti{animation:twinkle 4.2s ease-in-out 3s infinite}
 @keyframes twinkle{0%,80%,100%{transform:none}87%{transform:scale(1.3) rotate(20deg)}94%{transform:scale(.92) rotate(-8deg)}}
-.mode button::after,.dock button[data-view="ask"]::after{content:"";position:absolute;left:50%;top:50%;width:44px;height:44px;border-radius:50%;background:var(--halo);box-shadow:0 0 0 2px var(--ai);opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.5)}
-.mode button.tapme::after,.dock button.tapme::after{animation:tapme .95s ease-out 2}
-/* Once per session, a card points at the switch for a visitor who has not opened the AI side yet. */
-.aihint{position:absolute;z-index:45;top:56px;left:170px;max-width:calc(100% - 24px);display:flex;align-items:center;gap:10px;padding:7px 7px 7px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink);font-size:13px;line-height:1.3;opacity:0;transform:translateY(-6px);transition:opacity .28s,transform .28s}
-.aihint.on{opacity:1;transform:none}
-.aihint::before{content:"";position:absolute;top:-6px;left:var(--ax,30px);width:10px;height:10px;margin-left:-5px;background:var(--surface);border:solid var(--line);border-width:1px 0 0 1px;transform:rotate(45deg)}
-.aihint.up{top:auto;bottom:calc(70px + env(safe-area-inset-bottom,0px));transform:translateY(6px)}
-.aihint.up.on{transform:none}
-.aihint.up::before{top:auto;bottom:-6px;border-width:0 1px 1px 0}
-.aihint b{flex:1;min-width:0;display:flex;align-items:center;gap:6px;font-weight:600;color:var(--ai)}
-.aihint b svg{width:14px;height:14px;flex:none}
-.aihint .btn{height:30px;font-size:12.5px;flex:none}
-.aihint .btn.pri{background:var(--ai-fill);border-color:var(--ai-fill)}
-.aihint .x{appearance:none;flex:none;border:0;background:none;width:28px;height:28px;border-radius:7px;color:var(--ink2);font:400 18px/1 var(--sans);cursor:pointer}
-.aihint .x:hover{background:var(--line2);color:var(--ink)}
 .ai-only{display:none}
 .app[data-view="ask"] .ai-only{display:inline-flex}
 .crumb .dest{font-weight:600;color:var(--ai)}
@@ -581,6 +613,7 @@ h1 span{color:var(--ink3)}
   .work{overflow:auto;padding:0 0 calc(92px + env(safe-area-inset-bottom,0px))}
   .hero{position:static;transform:none;width:auto;padding:24px 18px 4px;gap:11px}
   .hero.off{opacity:1;transform:none;pointer-events:auto}
+  .pet{max-width:480px}
   h1{font-size:clamp(34px,10.5vw,50px)}
   .tagline{font-size:18px}
   .wall{position:relative;inset:auto;height:min(66vh,540px);min-height:330px}
@@ -622,12 +655,18 @@ h1 span{color:var(--ink3)}
   .qrow+.qrow .qlab{margin-left:8px}
   .askrow input{font-size:16px}
 }
+@media (max-width:639px){
+  .pet{max-width:none;grid-template-columns:1fr;grid-template-areas:"av" "say" "pills";justify-items:center;text-align:center;margin-top:50px;padding:12px 14px 16px}
+  .pet-av{margin-top:-50px}
+  .pet-say::before{display:none}
+  .pet-pills{justify-content:center;width:100%}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 </style>
 <noscript><style>
-body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;height:auto;overflow:visible;transform:none}.view[hidden],.brief[hidden]{display:block!important}.frame,.scheme,.store,.dock,.editor,.ph,.dots,.skip,.cur,.mode{display:none}#v-ask{display:none!important}.dev{display:block;padding:14px 18px}.hero{width:auto;padding:24px 18px}
+body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;height:auto;overflow:visible;transform:none}.view[hidden],.brief[hidden]{display:block!important}.frame,.scheme,.store,.dock,.editor,.ph,.dots,.skip,.cur,.mode,.pet{display:none}#v-ask{display:none!important}.dev{display:block;padding:14px 18px}.hero{width:auto;padding:24px 18px}
 </style></noscript>
 </head>
 <body>
@@ -652,11 +691,6 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     <button class="you" id="you" type="button" title="Change your role"><small>You:</small><span id="you-role">Hiring manager</span></button>
   </div>
 </header>
-
-<div class="aihint" id="aihint" role="dialog" aria-labelledby="aihint-t" hidden>
-  <b id="aihint-t"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11 3.5l1.9 4.6 4.6 1.9-4.6 1.9L11 16.5l-1.9-4.6L4.5 10l4.6-1.9z"/><path fill="currentColor" d="M18 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>Ask my AI agent about my work</b>
-  <button class="btn pri" type="button" id="aihint-go">Try it</button><button class="x" type="button" id="aihint-x" aria-label="Close">×</button>
-</div>
 
 <div class="stage">
   <aside class="editor" id="editor" aria-label="Source code">
@@ -693,11 +727,16 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
         <p class="tagline">Native apps, games and on-device intelligence.</p>
         <p class="lede">Ex-Apple, ex-Spirit Airlines. Now leading mobile for a four-brand travel-tech group and shipping my own apps with SwiftUI, Foundation Models and agentic AI. Three live on the App Store, one in development.</p>
         <div class="cta"><a class="btn pri" href="#contact">Get in touch</a><button class="btn" type="button" id="walk">Walk the wall <span class="arr" aria-hidden="true">→</span></button></div>
+        <div class="pet" id="pet">
+          <div class="pet-av" aria-hidden="true"><div class="pet-bob"><img class="on" src="images/mascot-idle.webp" data-pose="idle" alt="" width="336" height="360"><img src="images/mascot-mobile.webp" data-pose="mobile" alt="" width="336" height="360"><img src="images/mascot-ai.webp" data-pose="ai" alt="" width="336" height="360"><img src="images/mascot-all.webp" data-pose="all" alt="" width="336" height="360"></div></div>
+          <div class="pet-say"><p class="pet-line" aria-live="polite"><span id="pet-tx">Hey! Want to see my iOS and Flutter apps, or explore my AI work?</span> <button class="pet-go" type="button" id="pet-go" hidden>Ask my live agent →</button></p></div>
+          <div class="pet-pills" role="group" aria-label="Filter the wall"><button class="pill" type="button" data-filter="mobile" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.6"/><path d="M11 6h2"/></svg>Mobile Apps</button><button class="pill" type="button" data-filter="ai" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11 3.5l1.9 4.6 4.6 1.9-4.6 1.9L11 16.5l-1.9-4.6L4.5 10l4.6-1.9z"/><path fill="currentColor" d="M18 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI &amp; Agents</button><button class="pill" type="button" data-filter="all" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></svg>See All</button></div>
+        </div>
       </div>
 
       <div class="wall" id="wall" tabindex="-1" role="group" aria-label="Shipped work, eight devices">
 
-        <div class="dev" data-kind="phone" data-name="Pitch Pulse 26 / Live Activity">
+        <div class="dev" data-kind="phone" data-name="Pitch Pulse 26 / Live Activity" data-cat="mobile">
           <span class="scheme">Pitch Pulse 26 / Live Activity</span>
           <button class="frame" type="button" aria-label="Pitch Pulse 26, Live Activity. Show details">
             <span class="island"></span>
@@ -719,7 +758,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="phone" data-name="MedBill Companion / Agent">
+        <div class="dev" data-kind="phone" data-name="MedBill Companion / Agent" data-cat="ai">
           <span class="scheme">MedBill Companion / Agent</span>
           <button class="frame" type="button" aria-label="MedBill Companion, agentic AI. Show details">
             <span class="island"></span>
@@ -740,7 +779,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="phone" data-name="Snap / Quiz Battles">
+        <div class="dev" data-kind="phone" data-name="Snap / Quiz Battles" data-cat="mobile">
           <span class="scheme">Snap / Quiz Battles</span>
           <button class="frame" type="button" aria-label="Snap: Quiz Battles. Show details">
             <span class="island"></span>
@@ -762,7 +801,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="phone" data-name="Grid Glide / Word Puzzle">
+        <div class="dev" data-kind="phone" data-name="Grid Glide / Word Puzzle" data-cat="mobile">
           <span class="scheme">Grid Glide / Word Puzzle</span>
           <button class="frame" type="button" aria-label="Grid Glide, word puzzle. Show details">
             <span class="island"></span>
@@ -784,7 +823,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="phone" data-name="Checkfront / Tap to Pay">
+        <div class="dev" data-kind="phone" data-name="Checkfront / Tap to Pay" data-cat="mobile">
           <span class="scheme">Checkfront / Tap to Pay</span>
           <button class="frame" type="button" aria-label="Checkfront, Tap to Pay. Show details">
             <span class="island"></span>
@@ -813,7 +852,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="phone" data-name="Spirit / Ramp Central">
+        <div class="dev" data-kind="phone" data-name="Spirit / Ramp Central" data-cat="mobile ai">
           <span class="scheme">Spirit / Ramp Central</span>
           <button class="frame" type="button" aria-label="Spirit Airlines, Ramp Central. Show details">
             <span class="island"></span>
@@ -838,7 +877,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="pad" data-name="Spirit / Kiosk Check-In">
+        <div class="dev" data-kind="pad" data-name="Spirit / Kiosk Check-In" data-cat="mobile">
           <span class="scheme">Spirit / Kiosk Check-In</span>
           <button class="frame" type="button" aria-label="Spirit Airlines, iPad kiosk check-in. Show details">
             <span class="screen s-kiosk">
@@ -862,7 +901,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
           </div>
         </div>
 
-        <div class="dev" data-kind="phone" data-name="Apple / Wallet &amp; Apple Pay">
+        <div class="dev" data-kind="phone" data-name="Apple / Wallet &amp; Apple Pay" data-cat="mobile">
           <span class="scheme">Apple / Wallet &amp; Apple Pay</span>
           <button class="frame" type="button" aria-label="Apple, Wallet and Apple Pay. Show details">
             <span class="island"></span>
@@ -1033,7 +1072,8 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const app = $('#app'), work = $('#v-work'), wall = $('#wall'), hero = $('#hero');
-  const devs = $$('.dev', wall), panel = $('#case'), pager = $('#pager'), dots = $('#dots');
+  const DEVS = $$('.dev', wall), panel = $('#case'), pager = $('#pager'), dots = $('#dots');
+  let devs = DEVS.slice();   // the devices on the wall: all eight, or the ones the pet's filter keeps
   const act = $('#act'), actTx = $('#act-tx'), hud = $('#hud'), code = $('#code'), tf = $('#tf');
   const rk = $('#cur-rk'), ag = $('#cur-ag'), me = $('#cur-me'), live = $('#live');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -1045,7 +1085,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   const ALIAS = { experience: 'about', stack: 'about', top: 'work' };
   const ROLES = ['Hiring manager', 'Recruiter', 'Engineer', 'Founder'];
   const EMAIL = 'devrakeshv@gmail.com';
-  const S = { view: 'work', last: 'work', focus: 0, open: false, built: false, skipped: false, entering: false, run: 0 };
+  const S = { view: 'work', last: 'work', focus: 0, open: false, built: false, skipped: false, entering: false, run: 0, filter: 'all' };
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const box = store => ({
     get(k) { try { return store().getItem(k); } catch (e) { return null; } },
@@ -1053,7 +1093,8 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   });
   const keep = box(() => localStorage), session = box(() => sessionStorage);
 
-  devs.forEach(() => dots.appendChild(document.createElement('i')));
+  function buildDots() { dots.textContent = ''; devs.forEach(() => dots.appendChild(document.createElement('i'))); }
+  buildDots();
 
   /* wall */
   /* Where device i sits when device f is in front: sideways offset, depth and turn. */
@@ -1153,64 +1194,103 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     session.set('xc-walked', '1');
   }
 
-  /* The AI switch, pointed at once per session for a visitor who has not opened it. On desktop the Rakesh cursor
-     taps it and a card drops below; on phones the card sits above the Ask AI tab. Any click elsewhere closes it. */
-  const aiHint = $('#aihint');
-  let aiHintT = [], aiTries = 0;
+  /* The pet. Hovering a pill previews its pose and line; leaving goes back to the chosen filter (the reading pose when
+     that is See All); a click filters the wall. On touch a tap does both, and the See All cheer settles back to reading. */
+  const pet = $('#pet'), petAv = $('.pet-av', pet), petSay = $('.pet-say', pet), petTx = $('#pet-tx'), petGo = $('#pet-go');
+  const SAY = {
+    idle: 'Hey! Want to see my iOS and Flutter apps, or explore my AI work?',
+    mobile: 'From enterprise iOS to Pitch Pulse and Grid Glide, here\u2019s my Swift and Flutter lineup!',
+    ai: 'Lab goggles on! An on-device agent in MedBill and a Core ML model at Spirit.',
+    all: 'Showing the full stack: senior mobile engineering and AI agents!'
+  };
+  const SHOWING = { mobile: 'mobile apps', ai: 'AI work', all: 'all work' };
+  let pose = 'idle', poseT, leaveT, restT;
+  Object.keys(SAY).forEach(k => {
+    const z = document.createElement('span');
+    z.className = 'pet-size'; z.setAttribute('aria-hidden', 'true'); z.textContent = SAY[k];
+    if (k === 'ai') z.insertAdjacentHTML('beforeend', ' <b>Ask my live agent →</b>');
+    petSay.appendChild(z);
+  });
   if (session.get('xc-ai') === '1') app.dataset.aiSeen = '1';
-  const aiHintOK = () => !app.dataset.aiSeen && session.get('xc-ai-hint') !== '1' && S.built && app.dataset.phase === 'built' && S.view === 'work' && !S.open && !app.dataset.source && tf.hidden && !document.hidden;
+  const restPose = () => S.filter === 'all' ? 'idle' : S.filter;
 
-  function aiHintSoon(ms) {
-    aiHintT.forEach(clearTimeout); aiHintT = [];
-    if (app.dataset.aiSeen || session.get('xc-ai-hint') === '1') return;
-    aiHintT.push(setTimeout(showAiHint, ms));
+  function petShow(p) {
+    clearTimeout(leaveT);
+    if (p === pose) return;
+    pose = p;
+    $$('img', petAv).forEach(im => im.classList.toggle('on', im.dataset.pose === p));
+    if (!reduce.matches) { petAv.classList.remove('pop'); void petAv.offsetWidth; petAv.classList.add('pop'); }
+    petSay.classList.add('swap');
+    clearTimeout(poseT);
+    poseT = setTimeout(() => { petTx.textContent = SAY[p]; petGo.hidden = p !== 'ai'; petSay.classList.remove('swap'); }, reduce.matches ? 0 : 130);
   }
 
-  function showAiHint() {
-    if (!aiHintOK()) { if (!app.dataset.aiSeen && aiTries++ < 4) aiHintT.push(setTimeout(showAiHint, 6000)); return; }
-    const phone = narrow(), target = phone ? $('.dock [data-view="ask"]') : $('.mode [data-mode="ai"]');
-    if (!target || !target.offsetParent) return;
-    session.set('xc-ai-hint', '1');
-    const r = target.getBoundingClientRect(), box = app.getBoundingClientRect(), mouse = fine.matches && !phone && !reduce.matches;
-    if (mouse) put(rk, r.left + r.width * .62, r.top + r.height * .72);
-    aiHintT.push(setTimeout(() => target.classList.add('tapme'), mouse ? 650 : 0));
-    aiHintT.push(setTimeout(() => {
-      const mid = r.left + r.width / 2 - box.left;
-      aiHint.classList.toggle('up', phone);
-      aiHint.style.left = '0px';     // measure its natural width before placing it
-      aiHint.hidden = false;
-      const w = aiHint.offsetWidth;
-      const left = phone ? Math.max(12, Math.min(box.width - w - 12, mid - w + 34)) : Math.max(12, mid - 30);
-      aiHint.style.left = left + 'px';
-      aiHint.style.top = phone ? '' : (r.bottom - box.top + 10) + 'px';
-      aiHint.style.setProperty('--ax', Math.round(mid - left) + 'px');
-      const c = aiHint.getBoundingClientRect(), hits = el => { if (!el) return false; const b = el.getBoundingClientRect(); return c.left < b.right && c.right > b.left && c.top < b.bottom && c.bottom > b.top; };
-      if (!phone && [$('.avail', hero), $('.scheme', devs[S.focus]), $('.frame', devs[S.focus])].some(hits)) { aiHint.hidden = true; return; }   // never over the hero or the devices
-      requestAnimationFrame(() => aiHint.classList.add('on'));
-    }, mouse ? 900 : 300));
-    aiHintT.push(setTimeout(() => { target.classList.remove('tapme'); if (mouse) ambient(); }, mouse ? 2700 : 2200));
-    aiHintT.push(setTimeout(hideAiHint, 15000));
+  function setFilter(f, instant) {
+    if (!SHOWING[f] || f === S.filter) return;
+    S.filter = f;
+    $$('.pill', pet).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === f)));
+    endHints();
+    if (S.open) closeCase(true);
+    const fits = el => f === 'all' || el.dataset.cat.split(' ').includes(f);
+    const going = DEVS.filter(el => !el.hidden && !fits(el)), coming = DEVS.filter(el => el.hidden && fits(el));
+    const swap = () => {
+      going.forEach(el => { el.hidden = true; el.classList.remove('out', 'is-focus'); const v = $('video', el); if (v) v.pause(); });
+      coming.forEach(el => { el.hidden = false; if (!instant) el.classList.add('out'); });
+      devs = DEVS.filter(el => !el.hidden);
+      S.focus = 0;
+      buildDots();
+      S.entering = !instant && !reduce.matches;   // the devices that stay slide over one after another
+      syncPanel();
+      layout();
+      const n = devs.length + (devs.length === 1 ? ' device' : ' devices');
+      wall.setAttribute('aria-label', 'Shipped work, ' + n);
+      live.textContent = 'Showing ' + SHOWING[f] + ', ' + n;
+      requestAnimationFrame(() => requestAnimationFrame(() => coming.forEach(el => el.classList.remove('out'))));
+      setTimeout(() => { S.entering = false; DEVS.forEach(el => { el.style.transitionDelay = ''; }); }, 1000);
+    };
+    going.forEach(el => el.classList.add('out'));
+    if (instant || reduce.matches || !going.length) swap(); else setTimeout(swap, 280);
+    if (instant) petShow(restPose());   // set from elsewhere (the agent opening a device), so the pet goes back to reading
   }
 
-  function hideAiHint() {
-    aiHintT.forEach(clearTimeout); aiHintT = [];
-    $$('.mode .tapme, .dock .tapme').forEach(el => el.classList.remove('tapme'));
-    if (aiHint.hidden) return;
-    aiHint.classList.remove('on');
-    setTimeout(() => { if (!aiHint.classList.contains('on')) aiHint.hidden = true; }, 300);
+  $$('.pill', pet).forEach(b => {
+    b.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') petShow(b.dataset.filter); });
+    b.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { clearTimeout(leaveT); leaveT = setTimeout(() => petShow(S.filter), 260); } });
+    b.addEventListener('focus', () => petShow(b.dataset.filter));
+    b.addEventListener('click', () => {
+      setFilter(b.dataset.filter);
+      petShow(b.dataset.filter);
+      clearTimeout(restT);
+      if (b.dataset.filter === 'all' && !fine.matches) restT = setTimeout(() => petShow(restPose()), 2200);
+    });
+  });
+  petSay.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') clearTimeout(leaveT); });
+  petSay.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { clearTimeout(leaveT); leaveT = setTimeout(() => petShow(S.filter), 260); } });
+  pet.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { clearTimeout(leaveT); leaveT = setTimeout(() => petShow(restPose()), 90); } });
+  pet.addEventListener('focusout', e => { if (!pet.contains(e.relatedTarget)) petShow(restPose()); });
+  petGo.addEventListener('click', () => setView('ask'));
+
+  // Fits the hero between the toolbar and the dock: centered in that space when it is tight, then with the pet a step smaller
+  // each time (data-fit 1 to 3). Phones scroll, so they keep the full pet.
+  function fitPet() {
+    delete pet.dataset.fit; hero.style.top = '';
+    if (narrow() || !hero.offsetParent) return;
+    const top = work.getBoundingClientRect().top + 8, bottom = $('.dock').getBoundingClientRect().top - 10;
+    for (const f of ['1', '2', '3', '']) {
+      const r = hero.getBoundingClientRect();
+      if (!r.height || (r.top >= top && r.bottom <= bottom)) return;
+      if (r.height <= bottom - top) { hero.style.top = ((top + bottom) / 2 - hero.offsetParent.getBoundingClientRect().top) + 'px'; return; }
+      if (f) pet.dataset.fit = f;
+    }
   }
 
-  $('#aihint-go').addEventListener('click', () => { hideAiHint(); setView('ask'); });
-  $('#aihint-x').addEventListener('click', hideAiHint);
-  document.addEventListener('pointerdown', e => { if (!aiHint.hidden && !aiHint.contains(e.target)) hideAiHint(); }, true);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !aiHint.hidden) hideAiHint(); });
 
   /* Where the hero text really ends, in the wall's coordinates. It measures lines, not boxes: a wrapped heading's box runs to the column edge. */
   function heroInk() {
     const box = hero.getBoundingClientRect(), walk = document.createTreeWalker(hero, NodeFilter.SHOW_TEXT), rg = document.createRange();
-    let right = box.left;
+    let right = pet.offsetParent ? pet.getBoundingClientRect().right : box.left;
     for (let n; (n = walk.nextNode());) {
-      if (!n.data.trim()) continue;
+      if (!n.data.trim() || pet.contains(n)) continue;
       rg.selectNodeContents(n);
       for (const q of rg.getClientRects()) right = Math.max(right, q.right);
     }
@@ -1265,7 +1345,6 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     v = ALIAS[v] || v;
     if (!VIEWS.includes(v)) v = 'work';
     if (S.open) closeCase(true);
-    hideAiHint();
     if (v === 'ask' || ALIAS[v] === 'ask') app.dataset.aiSeen = '1';
     const was = S.view;
     S.view = v; app.dataset.view = v;
@@ -1279,7 +1358,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     $('#pagerbox').hidden = $('#pg-sep').hidden = v !== 'work';
     if (!fromHash) { try { history.replaceState(null, '', '#' + v); } catch (e) {} }
     if (narrow()) setSource(false);
-    if (v === 'work') { syncPanel(); layout(); hintSoon(1000); aiHintSoon(5200); } else $('#v-' + v).scrollTop = 0;
+    if (v === 'work') { syncPanel(); layout(); hintSoon(1000); } else $('#v-' + v).scrollTop = 0;
     if (v === 'ask' && was !== 'ask') enterAI(); else if (was === 'ask' && v !== 'ask') leaveAI();
     cursorsSoon();
   }
@@ -1408,7 +1487,6 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     setTimeout(() => { S.entering = false; devs.forEach(el => { el.style.transitionDelay = ''; }); }, 1000);
     if (session.get('xc-tf') !== '1') app.dataset.tf = 'new';
     hintSoon(instant ? 1500 : 2700);
-    aiHintSoon(instant ? 4200 : 7400);   // after the wall's first lean and tap ring
     const h = location.hash.slice(1), hv = ALIAS[h] || h;
     if (VIEWS.includes(hv) && hv !== 'work') setView(hv, true);
     setTimeout(ambient, instant ? 900 : 1600);
@@ -1419,8 +1497,9 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
 
   /* events */
   $$('video', wall).forEach(v => v.addEventListener('error', () => { v.hidden = true; }, { once: true }));
-  devs.forEach((el, i) => $('.frame', el).addEventListener('click', () => {
-    if (swiped) return;
+  DEVS.forEach(el => $('.frame', el).addEventListener('click', () => {
+    const i = devs.indexOf(el);
+    if (swiped || i < 0) return;
     if (i !== S.focus) setFocus(i); else if (S.open) closeCase(); else openCase();
   }));
   $('#case-close').addEventListener('click', () => closeCase());
@@ -1488,7 +1567,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   });
 
   wall.addEventListener('pointerdown', clearHints);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) { hintSoon(1200); aiHintSoon(3600); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) hintSoon(1200); });
   // Arrows at the end of a button or link become their own element, so they can move on hover.
   $$('.btn, .store, .rows a, .cert a, .foot a').forEach(el => {
     const t = el.lastChild, m = t && t.nodeType === 3 && t.data.match(/^([^]*?)\s*([→↗])\s*$/);
@@ -1504,8 +1583,8 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   });
 
   let lr = 0;
-  new ResizeObserver(() => { cancelAnimationFrame(lr); lr = requestAnimationFrame(layout); cursorsSoon(); }).observe(wall);
-  const onMode = () => { if (S.open) closeCase(true); syncPanel(); setSource(false); layout(); cursorsSoon(); };
+  new ResizeObserver(() => { cancelAnimationFrame(lr); lr = requestAnimationFrame(() => { fitPet(); layout(); }); cursorsSoon(); }).observe(wall);
+  const onMode = () => { if (S.open) closeCase(true); syncPanel(); setSource(false); fitPet(); layout(); cursorsSoon(); };
   if (mqNarrow.addEventListener) mqNarrow.addEventListener('change', onMode); else mqNarrow.addListener(onMode);
 
   /* AI scheme: the same window, with a live agent answering from the resume */
@@ -1656,7 +1735,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   function agTo(target, fx, fy, dx, dy) { A.anchor = [target, fx, fy, dx || 0, dy || 0]; agPlace(); }
 
   function openDevice(card, i) {
-    const src = devs[i], mini = add(card, 'div', 'dev mini');
+    const src = DEVS[i], mini = add(card, 'div', 'dev mini');
     const frame = $('.frame', src).cloneNode(true), sel = $('.sel', frame), side = add(card, 'div');
     mini.dataset.kind = src.dataset.kind;
     if (sel) sel.remove();
@@ -1672,7 +1751,7 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
     return go;
   }
 
-  function seeOnWall(i) { hideTF(); setView('work'); setFocus(i); openCase(); }
+  function seeOnWall(i) { hideTF(); setFilter('all', true); setView('work'); setFocus(i); openCase(); }
 
   const ruleLines = k => RULES[k].map(s => DATA.prompt.findIndex(l => l.indexOf(s) === 0)).filter(i => i >= 0);
   function showRule(at) {
@@ -2012,9 +2091,10 @@ body{overflow:auto}.app,.stage,.canvas,.view,.wall,.dev,.hero{position:static;he
   $('#model').textContent = DATA.modelName;
   buildDocs(); buildMap(); buildChips();
 
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fitPet(); layout(); });
   let role = setRole(parseInt(keep.get('xc-role') || '0', 10) || 0);
   syncPanel();
+  fitPet();
   layout();
   if (reduce.matches || session.get('xc-intro') === '1' || location.hash === '#ask') finish(true); else intro();
 })();
